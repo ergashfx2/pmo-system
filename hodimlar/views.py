@@ -1,28 +1,36 @@
-from django.contrib.auth import authenticate
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from .forms import UserLoginForm
-from .models import User
 
 
-async def login(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = await authenticate(request,username,password)
-            if user is None:
-                try:
-                    user = User.objects.get(username=username)
-                    user = authenticate(request, username=user.username, password=password)
-                except User.DoesNotExist:
-                    user = None
+def login_view(request):
+    return render(request, 'login.html')
 
-            if user is not None:
-                await login(request,user)
-                return redirect('home')
+def login_confirmView(request):
+    form = UserLoginForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            try:
+                user = User.objects.get(username=username)
+                user = authenticate(request, username=user.username, password=password)
+            except User.DoesNotExist:
+                user = None
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html',context={'form':form,'error':'Parol yoki username xato kiritlgan'})
     else:
         form = UserLoginForm()
-        return render(request,'login.html',context={'form':form})
+    return render(request, 'login.html', {'form': form})
 
-    return render(request,'login.html')
+def logoutView (request):
+    logout(request)
+    return redirect('hodimlar:login')
+

@@ -2,6 +2,28 @@
 
 {% block title %} Home {% endblock title %}
 
+{% block menu %}
+<div class="ui large vertical menu">
+  <div class="item">
+    <div class="ui icon input">
+        <label>
+            <input type="text" placeholder="Search ...">
+        </label>
+        <i class="search icon"></i>
+    </div>
+  </div>
+  <a class="active item">
+    Profil
+  </a>
+  <a class="item">
+    Barcha loyihalar
+  </a>
+  <a class="item">
+    Mening loyihalarim
+  </a>
+</div>
+{% endblock menu %}
+
 {% block content %}
     <div class="ui grid">
     <div class="three wide column"></div>

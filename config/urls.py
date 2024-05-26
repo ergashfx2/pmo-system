@@ -6,8 +6,8 @@ from .views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('hodimlar.urls', namespace='employees')),
-    path('/home', home, name='home'),
+    path('', include('hodimlar.urls')),
+    path('home', home, name='home'),
 ]
 
 if settings.DEBUG:
