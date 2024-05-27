@@ -6,9 +6,8 @@ from .forms import UserLoginForm
 
 
 def login_view(request):
-    return render(request, 'login.html')
-
-def login_confirmView(request):
+    if request.user.is_authenticated :
+        return redirect('home')
     form = UserLoginForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         username = form.cleaned_data.get('username')
@@ -25,7 +24,7 @@ def login_confirmView(request):
             login(request, user)
             return redirect('home')
         else:
-            return render(request, 'login.html',context={'form':form,'error':'Parol yoki username xato kiritlgan'})
+            return render(request, 'login.html', context={'form': form, 'error': 'Parol yoki username xato kiritlgan'})
     else:
         form = UserLoginForm()
     return render(request, 'login.html', {'form': form})
